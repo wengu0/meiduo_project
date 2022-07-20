@@ -157,6 +157,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+#配置静态文件加载项
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'meiduo_mall/static')]
+print(BASE_DIR)
 
 # 日志配置
 LOGGING = {
