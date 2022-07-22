@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import sys
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -29,14 +31,20 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+# 查看导包路径
+# print(sys.path)
+
+# 追加导包路径到apps包
+sys.path.insert(0,os.path.join(BASE_DIR,'meiduo_mall/apps'))
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
+    'django.contrib.auth', # 认证系统子应用
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -66,19 +74,19 @@ TEMPLATES = [
             'environment': 'meiduo_mall.utils.jinja2_env.jinja2_environment',
         },
     },
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'meiduo_mall/templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+    # {
+    #     'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    #     'DIRS': [os.path.join(BASE_DIR, 'templates')],
+    #     'APP_DIRS': True,
+    #     'OPTIONS': {
+    #         'context_processors': [
+    #             'django.template.context_processors.debug',
+    #             'django.template.context_processors.request',
+    #             'django.contrib.auth.context_processors.auth',
+    #             'django.contrib.messages.context_processors.messages',
+    #         ],
+    #     },
+    # },
 ]
 
 WSGI_APPLICATION = 'meiduo_mall.wsgi.application'
@@ -159,7 +167,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 #配置静态文件加载项
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'meiduo_mall/static')]
-print(BASE_DIR)
+
 
 # 日志配置
 LOGGING = {
@@ -202,3 +210,5 @@ LOGGING = {
         },
     }
 }
+# 指定自定义用户模型类 值的语法 ==> '子应用.用户模块类'
+AUTH_USER_MODEL = 'users.User'
