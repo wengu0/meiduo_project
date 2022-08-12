@@ -1,16 +1,40 @@
 from django import http
+from django.contrib.auth import login
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from django.views import View
 import re
 from users.models import User
+from meiduo_mall.utils.response_code import RETCODE
 from django.db import DatabaseError
 # Create your views here.
+
+class UsernameCountView(View):
+    """判断用户名有否重复"""
+    def get(self,request,username):
+        """
+        :param username:用户名
+        :return:JSON
+        """
+        # 实现业务逻辑，使用username查询对应的记录的条数(filter返回的是满足条件的结果集)
+        #响应结果
+        count = User.objects.filter(username=username).count()
+        return http.JsonResponse({'code':RETCODE.OK,'errmsg':'OK','count':count})
+class MobileCountView(View):
+    """判断手机号是否重复"""
+    def get(self,request,mobile):
+        """
+        :param mobile: 手机号
+        :return: JSON
+        """
+        count = User.objects.filter(mobile=mobile).count()
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK', 'count': count})
 
 class RegisterView(View):
     """用户注册"""
     def get(self,request):
         return render(request,'register.html')
+
     def post(self,request):
         """实现用户注册业务逻辑"""
         # 接受参数，表单数据
@@ -44,10 +68,11 @@ class RegisterView(View):
 
         # 保存注册数据
         try:
-            User.objects.create_user(username=username,password=password,mobile=mobile)
+            user = User.objects.create_user(username=username,password=password,mobile=mobile)
         except DatabaseError:
             return render(request,'register.html',{'register_errmsg':'注册失败'})
 
+        login(request,user)
         # 响应结果
         # return http.HttpResponseForbidden('注册成功，首页')
         # return  redirect('/')

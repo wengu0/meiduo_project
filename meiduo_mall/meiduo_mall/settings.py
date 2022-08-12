@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users'
+    'users', # 用户模块
+    'contents', # 首页广告模块
+    'verifications' # 验证码模块
+
 ]
 
 MIDDLEWARE = [
@@ -107,26 +110,30 @@ DATABASES = {
 }
 # 配置Redis数据库
 CACHES = {
-    "default": {
+    "default": { # 默认
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://192.168.153.128/0",
+        "LOCATION": "redis://192.168.153.128:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     },
-    # session
-    "session": {
-    "BACKEND": "django_redis.cache.RedisCache",
-    "LOCATION": "redis://192.168.153.128/1",
-    "OPTIONS": {
-        "CLIENT_CLASS": "django_redis.client.DefaultClient",
-    }
-},
-
+    "session": { # session
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://192.168.153.128:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    "verify_code": { # 验证码
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://192.168.61.150:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
 }
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
-
+SESSION_CACHE_ALIAS = "session"
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
